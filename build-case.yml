@@ -1,0 +1,33 @@
+name: Build 3D-printable case (STL)
+
+on:
+  push:
+    paths:
+      - "case/**"
+      - ".github/workflows/build-case.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad
+
+      - name: Render base.stl
+        run: openscad -o case/base.stl case/base.scad
+
+      - name: Render lid.stl
+        run: openscad -o case/lid.stl case/lid.scad
+
+      - name: Upload STL files
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32-s3-node-case-stl
+          path: |
+            case/base.stl
+            case/lid.stl
