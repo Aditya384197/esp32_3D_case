@@ -23,12 +23,13 @@ esp_usbc_w  = 9.0;    // USB-C shell cutout width
 esp_usbc_h  = 3.6;    // USB-C shell cutout height
 esp_usbc_gap= 20.0;   // centre-to-centre spacing between the two USB-C ports
 
-// ---- NRF24L01+PA+LNA (large body, SMA antenna) ----
+// ---- NRF24L01+PA+LNA (large body, SMA antenna) — TWO modules ----
 // Board: 40.7 x 15.5 x 12.2 mm (Addicore/SainSmart/MakerFocus agree)
 nrf_len     = 40.7;
 nrf_wid     = 15.5;
 nrf_h       = 12.2;
 sma_hole_d  = 10.5;   // SMA bulkhead through-hole (nut across-flats ~10mm)
+nrf_count   = 2;      // number of NRF24L01+PA+LNA modules to fit
 
 // ---- TP4056 Type-C charge/protection module ----
 // Board: ~27 x 17.5 x 5 mm (rounded up from 25-29 x 17-20mm listings)
@@ -60,8 +61,10 @@ btn_body    = 6.0;
 antenna_hole_d = 10.5;
 
 // ---- Derived internal cavity ----
-// Tier 2 (upper shelf) holds ESP32-S3 + NRF24L01 + TP4056 side by side
-tier2_w = esp_wid + nrf_wid + tp_wid + 3*4;              // + gaps between boards
+// Tier 2 (upper shelf) holds ESP32-S3 + N x NRF24L01 + TP4056 side by side
+board_count = nrf_count + 2;                          // ESP32-S3 + N x NRF24 + TP4056
+board_gap   = 4;                                       // clear gap between adjacent boards
+tier2_w = esp_wid + nrf_count*nrf_wid + tp_wid + (board_count-1)*board_gap;
 tier2_l = my_max(esp_len, cell_len + 4);
 
 inner_len = tier2_l + 4;
